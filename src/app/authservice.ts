@@ -21,8 +21,20 @@ export class Authservice {
     return this.http.post(`${this.HttpApi}`,user);
   }
 
-  updateuser(id:number ,user:{name:string,email:string}): Observable<any>{
+updateuser(id: number, user: {
+  id: number,
+  name: string,
+  email: string,
+  address: string,
+  contactNumber: string,
+  investmentPortfolios: any[]
+}): Observable<any> {
+  return this.http.put(`${this.HttpApi}/${id}`, user);
+}
 
-    return this.http.put(`${this.HttpApi}/${id}`,user)
+
+   deleteUser(id: number): Observable<any> {
+    return this.http.delete(`${this.HttpApi}/${id}`);
+    // Example backend endpoint: DELETE /api/Auth/{id}
   }
 }
