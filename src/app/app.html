@@ -1,28 +1,45 @@
-<Div>
+    <div class="container">
 
-  <div>
-    <h1>Register</h1>
-    <input type="text" [(ngModel)]="name">
-    <br>
-    <input type="text" [(ngModel)]="email">
-    <button (click)="addUsre()">add</button>
-  </div>
-  <div>
-    <div *ngFor="let u of usredata">
-            {{u.name}}
-            {{u.email}}
+    <!-- Register Form -->
+    <div class="card form-card p-3 mb-3" *ngIf="selectedUserId==null">
+      <h1>Register</h1>
+      <input type="text" [(ngModel)]="name" placeholder="Enter Name" class="form-control mb-2">
+      <input type="text" [(ngModel)]="email" placeholder="Enter Email" class="form-control mb-2">
+      <button class="btn btn-primary w-100" (click)="addUsre()">Add</button>
+      <button class="btn btn-danger w-100" (click)="closeForm()">clear</button>
     </div>
-  </div>
-</Div>
-<button (click)="getdata()">getData</button>
 
-<div>
-  <div>
-    <input type="text" [(ngModel)]="name">
-    {{name}}
-    <br>
-    <input type="text" [(ngModel)]="email">
+      <!-- Edit Form -->
+    <div *ngIf="selectedUserId !== null" class="card form-card mt-3 p-3">
+      <h2>Edit User</h2>
+      <input type="text" [(ngModel)]="name" placeholder="Edit Name" class="form-control mb-2">
+      <input type="text" [(ngModel)]="email" placeholder="Edit Email" class="form-control mb-2">
+      <button class="btn btn-success w-100" (click)="editUser()">Update</button>
+      <button class="btn btn-danger w-100" (click)="closeForm()">clear</button>
+    </div>
+          <!-- <button class="btn btn-outline-primary mt-2 w-100" (click)="getdata()">Get Data</button> -->
+          <button class="btn btn-outline-primary mt-2 w-100" (click)="refreshData()">Get Data</button>
+    </div>
 
-    <button (click)="edituser()">Update</button>
-  </div>
-</div>
+    <!-- User List Table -->
+    <div class="user-list card p-3">
+    <table class="table table-striped">
+    <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let u of usredata">
+          <td>{{u.name}}</td>
+          <td>{{u.email}}</td>
+          <td>
+            <button class="btn btn-sm btn-danger me-2" (click)="deleteUser(u.id)">Delete</button>
+            <button class="btn btn-sm btn-success" (click)="selectUser(u)">Edit</button>
+          </td>
+        </tr>
+    </tbody>
+    </table>
+    </div>

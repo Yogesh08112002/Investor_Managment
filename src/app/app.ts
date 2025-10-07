@@ -10,12 +10,34 @@ import { CommonModule } from '@angular/common';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit{
   protected readonly title = signal('InvestorFramework');
   name:string='';
   email:string='';
+  uname:string='';
+  uemail:string='';
   usredata:any[]=[];
-  constructor(private auth:Authservice){}
+
+  ngOnInit(): void {
+  }
+  closeForm() {
+  this.name = '';
+  this.email = '';
+  this.selectedUserId = null;
+}
+
+refreshData() {
+  this.getdata();      // Fetch latest data
+  this.name = '';      // Clear input fields
+  this.email = '';
+  this.selectedUserId = null; // Deselect any user
+}
+
+
+
+  constructor(private auth:Authservice){
+
+  }
 
   getdata(): void {
     this.auth.getData().subscribe({
@@ -32,6 +54,7 @@ addUsre(){
   this.auth.addInvestor({name:this.name,email:this.email}).subscribe({
     next:()=>{
       alert("Successfully added")
+      this.getdata()
     },
     error:(e)=>{
       alert("ERROR"+e.error)
@@ -39,16 +62,55 @@ addUsre(){
   })
 }
 
-edituser(){
-    this.auth.updateuser(1,{name:this.name,email:this.email}).subscribe({next:()=>{
-      alert('update Sucessfull')
-    },
+selectedUserId: number | null = null; // Track which user to edit
 
-    error:(e)=>{
-      alert(e.error)
-    }
-  })
+selectUser(u: any) {
+  this.selectedUserId = u.id;
+  this.name = u.name;
+  this.email = u.email;
 }
+editUser() {
+  if (this.selectedUserId == null) {
+    alert("Please select a user to edit");
+    return;
+  }
+
+  const user = this.usredata.find(u => u.id === this.selectedUserId);
+  if (!user) return;
+
+  const payload = {
+    ...user,             // keep all existing fields
+    name: this.name,     // update name
+    email: this.email    // update email
+  };
+
+  this.auth.updateuser(this.selectedUserId, payload).subscribe({
+    next: () => {
+      alert("Updated successfully");
+      this.getdata();
+      this.name = '';
+      this.email = '';
+      this.selectedUserId = null;
+    },
+    error: (e) => {
+      console.error("ERROR", e);
+      alert("Update failed");
+    }
+  });
+}
+ deleteUser(id: number) {
+    if (confirm('Are you sure you want to delete this user?')) {
+      this.auth.deleteUser(id).subscribe({
+        next: () => {
+          alert('User deleted successfully');
+          this.getdata();
+        },
+        error: (err) => {
+          console.log('ERROR deleting user: ' + err.error);
+        }
+      });
+    }
+  }
 
 
 }
