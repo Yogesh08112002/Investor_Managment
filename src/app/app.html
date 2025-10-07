@@ -1,0 +1,28 @@
+<Div>
+
+  <div>
+    <h1>Register</h1>
+    <input type="text" [(ngModel)]="name">
+    <br>
+    <input type="text" [(ngModel)]="email">
+    <button (click)="addUsre()">add</button>
+  </div>
+  <div>
+    <div *ngFor="let u of usredata">
+            {{u.name}}
+            {{u.email}}
+    </div>
+  </div>
+</Div>
+<button (click)="getdata()">getData</button>
+
+<div>
+  <div>
+    <input type="text" [(ngModel)]="name">
+    {{name}}
+    <br>
+    <input type="text" [(ngModel)]="email">
+
+    <button (click)="edituser()">Update</button>
+  </div>
+</div>
